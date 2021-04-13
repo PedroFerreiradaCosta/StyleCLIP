@@ -31,7 +31,7 @@ def main(args):
     g_ema.load_state_dict(torch.load(args.ckpt)["g_ema"], strict=False)
     g_ema.eval()
     g_ema = g_ema.cuda()
-    mean_latent = g_ema.mean_latent(4096)
+    mean_latent = g_ema.mean_latent(args.seed)
 
     if args.latent_path:
         latent_code_init = torch.load(args.latent_path).cuda()
@@ -90,7 +90,7 @@ def main(args):
     else:
         final_result = img_gen
 
-    return final_result
+    return final_result,  latent
 
 
 
@@ -111,6 +111,7 @@ if __name__ == "__main__":
                                                                       "not provided")
     parser.add_argument("--save_intermediate_image_every", type=int, default=20, help="if > 0 then saves intermidate results during the optimization")
     parser.add_argument("--results_dir", type=str, default="results")
+    parser.add_argument("--seed", type=int, default=4096)
 
     args = parser.parse_args()
 
